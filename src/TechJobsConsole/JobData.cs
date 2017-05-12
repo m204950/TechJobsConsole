@@ -10,7 +10,7 @@ namespace TechJobsConsole
         static List<Dictionary<string, string>> AllJobs = new List<Dictionary<string, string>>();
         static bool IsDataLoaded = false;
 
-        public static List<Dictionary<string, string>> FindAll()
+        public static List<Dictionary<string, string>> FindAllJobs()
         {
             LoadData();
             return AllJobs;
@@ -20,7 +20,7 @@ namespace TechJobsConsole
          * Returns a list of all values contained in a given column,
          * without duplicates. 
          */
-        public static List<string> FindAll(string column)
+        public static List<string> FindColumnValues(string column)
         {
             LoadData();
 
@@ -49,7 +49,39 @@ namespace TechJobsConsole
             {
                 string aValue = row[column];
 
-                if (aValue.Contains(value))
+                if (aValue.ToLower().Contains(value.ToLower()))
+                {
+                    jobs.Add(row);
+                }
+            }
+
+            return jobs;
+        }
+
+        public static List<Dictionary<string, string>> FindByValue(string value)
+        {
+            // load data, if not already loaded
+            LoadData();
+
+            string[] jobKeys = new string[AllJobs[0].Count];
+            AllJobs[0].Keys.CopyTo(jobKeys, 0);
+
+            List<Dictionary<string, string>> jobs = new List<Dictionary<string, string>>();
+
+            foreach (Dictionary<string, string> row in AllJobs)
+            {
+                bool found = false;
+                foreach (string myKey in jobKeys)
+                {
+
+                    string aValue = row[myKey];
+
+                    if (aValue.ToLower().Contains(value.ToLower()))
+                    {
+                        found = true;
+                    }
+                }
+                if (found)
                 {
                     jobs.Add(row);
                 }
@@ -59,8 +91,8 @@ namespace TechJobsConsole
         }
 
         /*
-         * Load and parse data from job_data.csv
-         */
+          * Load and parse data from job_data.csv
+          */
         private static void LoadData()
         {
 
